@@ -1,0 +1,38 @@
+name: be
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.12
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Register back-end package
+      run: |
+        mkdir -p /home/runner/go/src/
+        cp /home/runner/work/kn/kn/be /home/runner/go/src/ --recursive
+        ls -la /home/runner/go/src/be
+
+    - name: Get dependencies
+      run: |
+        cd /home/runner/go/src/be
+        go get -v ./...
+
+    - name: Test
+      run: |
+        cd /home/runner/go/src/be
+        go test -v ./...
+
+    - name: Build
+      run: |
+        cd /home/runner/go/src/be
+        go build -o kn cmd/main.go

@@ -7,7 +7,7 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/pkg/errors"
 
-	"kn/pkg/model"
+	"be/pkg/model"
 )
 
 // Crawl is exported.

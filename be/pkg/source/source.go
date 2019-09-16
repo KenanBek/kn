@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"kn/pkg/model"
+	"be/pkg/model"
 )
 
 // Parse is exported.

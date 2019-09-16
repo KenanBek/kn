@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"kn/pkg/crawler"
-	"kn/pkg/source"
-	"kn/pkg/storage"
+	"be/pkg/crawler"
+	"be/pkg/source"
+	"be/pkg/storage"
 )
 
 func main() {
