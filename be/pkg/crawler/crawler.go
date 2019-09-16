@@ -11,7 +11,7 @@ import (
 )
 
 // Crawl is exported.
-func Crawl(sourceLink model.Link) {
+func Crawl(sourceLink model.SourceLink) {
 	collector := colly.NewCollector()
 
 	articleRegexp, err := regexp.Compile(sourceLink.ArticleRegexp)

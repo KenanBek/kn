@@ -12,7 +12,7 @@ import (
 )
 
 // Parse is exported.
-func Parse() []model.Link {
+func Parse() []model.SourceLink {
 	log.Println("Parser started")
 
 	file, err := os.Open("assets/initial_sources.json")
@@ -26,7 +26,7 @@ func Parse() []model.Link {
 		log.Fatalln(errors.Wrap(err, "Error while reading file"))
 	}
 
-	var sourceLinks []model.Link
+	var sourceLinks []model.SourceLink
 	err = json.Unmarshal(bytes, &sourceLinks)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Error while parsing JSON"))

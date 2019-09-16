@@ -6,8 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// Link is type to keep information about source link.
-type Link struct {
+// SourceLink is exported.
+type SourceLink struct {
 	ID            primitive.ObjectID `bson:"_id"            json:"id,omitempty"`
 	SourceURL     string             `bson:"source_url"     json:"source_url"`
 	ArticleRegexp string             `bson:"article_regexp" json:"article_regexp"`

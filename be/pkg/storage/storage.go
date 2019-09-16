@@ -2,15 +2,16 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
-
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var (
@@ -35,7 +36,12 @@ func New() Storage {
 	storage := Storage{}
 
 	// client
-	clnt, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	host := os.Getenv("KN_HOST_MONGODB")
+	if host == "" {
+		host = "localhost"
+	}
+	uri := fmt.Sprintf("mongodb://%s:27017", host)
+	clnt, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Database new client error"))
