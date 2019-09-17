@@ -27,10 +27,16 @@ jobs:
         cd /home/runner/go/src/be
         go get -v ./...
 
-    - name: Test
+    - name: Test & Publish
       run: |
         cd /home/runner/go/src/be
-        go test -v ./...
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+        # move to git directory
+        # codecov's bash requires .git directory
+        cd /home/runner/work/kn/kn
+        # -s used to enable search in specified directory
+        bash <(curl -s https://codecov.io/bash) -s /home/runner/go/src/be
+        cat /home/runner/go/src/be/coverage.txt
 
     - name: Build
       run: |
