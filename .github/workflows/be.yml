@@ -42,3 +42,8 @@ jobs:
       run: |
         cd /home/runner/go/src/be
         go build -o kn cmd/main.go
+
+    - name: Docker
+      uses: "actions/docker/cli@master"
+      with:
+        args: "build -f ./be/Dockerfile ./be"
