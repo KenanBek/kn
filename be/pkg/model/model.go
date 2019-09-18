@@ -1,8 +1,6 @@
 package model
 
 import (
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -11,6 +9,25 @@ type SourceLink struct {
 	ID            primitive.ObjectID `bson:"_id"            json:"id,omitempty"`
 	SourceURL     string             `bson:"source_url"     json:"source_url"`
 	ArticleRegexp string             `bson:"article_regexp" json:"article_regexp"`
-	CreatedAt     time.Time          `bson:"created_at"     json:"created_at,omitempty"`
-	UpdatedAt     time.Time          `bson:"updated_at"     json:"updated_at,omitempty"`
+}
+
+// URIHash is exported.
+type URIHash struct {
+	ID   primitive.ObjectID `bson:"_id"  json:"id,omitempty"`
+	Hash string             `bson:"hash" json:"hash"`
+	URI  string             `bson:"uri"  json:"uri"`
+}
+
+// Post is exported.
+type Post struct {
+	ID   primitive.ObjectID `bson:"_id"  json:"id,omitempty"`
+	Hash string             `bson:"hash" json:"hash"`
+	URI  string             `bson:"uri"  json:"uri"`
+}
+
+// Page is exported.
+type Page struct {
+	ID   primitive.ObjectID `bson:"_id"  json:"id,omitempty"`
+	Hash string             `bson:"hash" json:"hash"`
+	URI  string             `bson:"uri"  json:"uri"`
 }
