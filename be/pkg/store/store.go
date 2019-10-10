@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"time"
+    "strconv"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,26 +17,21 @@ import (
 )
 
 const (
-	// DatabaseName ...
-	DatabaseName = "x_be"
-	// URIHashesColName ...
-	URIHashesColName = "uris_hashes"
-	// PostsColName ...
-	PostsColName = "posts"
-	// PagesColName ...
-	PagesColName = "pages"
-	// ErrorsColName ...
-	ErrorsColName = "errors"
+	DatabaseName = "kn"
+
+    CollectionNameLinks = "links"
+    CollectionNamePosts = "posts"
 )
 
 // Store is exported.
 type Store struct {
-	client                          *mongo.Client
-	context                         context.Context
-	database                        *mongo.Database
-	uriHashes, posts, pages, errors *mongo.Collection
+	client   *mongo.Client
+	context  context.Context
+	database *mongo.Database
+	Cancel   func()
 
-	Cancel func()
+	links, posts *mongo.Collection
+
 }
 
 // New is exported.
@@ -43,49 +39,51 @@ func New() Store {
 	store := Store{}
 
 	// client
-	host := os.Getenv("KN_HOST_MONGODB")
+	host := os.Getenv("KN_MONGODB_HOST")
 	if host == "" {
 		host = "localhost"
 	}
-	uri := fmt.Sprintf("mongodb://%s:27017", host)
-	clnt, err := mongo.NewClient(options.Client().ApplyURI(uri))
+    portStr := os.Getenv("KN_MONGODB_PORT")
+    port, err := strconv.Atoi(portStr)
+    if err != nil {
+        port = 27017
+    }
+	uri := fmt.Sprintf("mongodb://%s:%d", host, port)
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Database new client error"))
 	}
 
 	// context
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	store.Cancel = cancel
 
 	// connection
-	err = clnt.Connect(ctx)
+	err = client.Connect(context)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Database connection error"))
 	}
 
 	// database
-	db := clnt.Database(DatabaseName)
+	db := client.Database(DatabaseName)
 
 	// collections
-	uriHashes := db.Collection(URIHashesColName)
-	posts := db.Collection(PostsColName)
-	pages := db.Collection(PagesColName)
-	errors := db.Collection(ErrorsColName)
+	links := db.Collection(CollectionNameLinks)
+	posts := db.Collection(CollectionNamePosts)
 
 	return Store{
-		client:    clnt,
-		context:   ctx,
-		Cancel:    cancel,
-		database:  db,
-		uriHashes: uriHashes,
-		posts:     posts,
-		pages:     pages,
-		errors:    errors,
+        // connection
+		client:   client,
+		context:  context,
+		database: db,
+        Cancel:   cancel,
+        // collections
+		links:    links,
+		posts:    posts,
 	}
 }
 
-// Ping is exported.
 func (store *Store) Ping() {
 	err := store.client.Ping(store.context, readpref.Primary())
 	if err != nil {
@@ -93,32 +91,30 @@ func (store *Store) Ping() {
 	}
 }
 
-// IsURIHashed is exported.
-func (store *Store) IsURIHashed(hash string) bool {
+func (store *Store) CheckLinkByHash(hash string) bool {
 	filter := bson.M{
 		"hash": hash,
 	}
-	result := store.uriHashes.FindOne(store.context, filter)
+	result := store.links.FindOne(store.context, filter)
 
 	// if there is no error it means we have a matching link
 	return result.Err() == nil
 }
 
-// AddURIHash is exported.
-func (store *Store) AddURIHash(uriHash *model.URIHash) {
-	filter := bson.M{"hash": bson.M{"$eq": uriHash.Hash}}
+func (store *Store) AddLink(link *model.Link) {
+	filter := bson.M{"hash": bson.M{"$eq": link.Hash}}
 
 	options := options.UpdateOptions{}
 	options.SetUpsert(true)
 
 	updateData := bson.M{
 		"$set": bson.M{
-			"hash": uriHash.Hash,
-			"uri":  uriHash.URI,
+			"hash": link.Hash,
+			"uri":  link.URI,
 		},
 	}
 
-	_, err := store.uriHashes.UpdateOne(store.context, filter, updateData, &options)
+	_, err := store.links.UpdateOne(store.context, filter, updateData, &options)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Database URIHash update error"))
 	}

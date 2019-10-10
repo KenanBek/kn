@@ -15,8 +15,10 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     environment:
-      - KN_HOST_MONGODB=mongodb
+      - KN_MONGODB_HOST=mongodb
+      - KN_MONGODB_PORT=27017
     depends_on:
       - mongodb
     command:
       - kn
+

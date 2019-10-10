@@ -19,8 +19,8 @@ func Hash(url string) string {
 	return hash
 }
 
-// SourceLinks is exported.
-func SourceLinks(sourceLink model.SourceLink) {
+// CrawlSourceLinks is exported.
+func CrawlSourceLinks(sourceLink model.SourceLink) {
 	storage := store.New()
 	defer storage.Cancel()
 
@@ -32,25 +32,25 @@ func SourceLinks(sourceLink model.SourceLink) {
 	}
 
 	collector.OnHTML("a", func(e *colly.HTMLElement) {
-		link := e.Attr("href")
+		uri := e.Attr("href")
 
-		hash := Hash(link)
-		if !storage.IsURIHashed(hash) {
-			uriHash := model.URIHash{
-				URI:  link,
+		hash := Hash(uri)
+		if !storage.CheckLinkByHash(hash) {
+			link := model.Link{
 				Hash: hash,
+				URI:  uri,
 			}
-			storage.AddURIHash(&uriHash)
+			storage.AddLink(&link)
 
-			if postRegexp.MatchString(link) {
-				log.Println("Found article", link)
+			if postRegexp.MatchString(uri) {
+				log.Println("Found article", uri)
 
 			} else {
-				log.Println("Not article", link)
+				log.Println("Not article", uri)
 
 			}
 		} else {
-			log.Println("Already processed", link)
+			log.Println("Already processed", uri)
 		}
 	})
 

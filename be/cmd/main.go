@@ -12,6 +12,6 @@ func main() {
 
 	sourceLinks := source.Parse()
 	for _, sourceLink := range sourceLinks {
-		crawl.SourceLinks(sourceLink)
+		crawl.CrawlSourceLinks(sourceLink)
 	}
 }

@@ -11,7 +11,7 @@ import (
 	"be/pkg/model"
 )
 
-// Parse is exported.
+// Parse parses source files and return list of source links.
 func Parse() []model.SourceLink {
 	log.Println("Parser started")
 

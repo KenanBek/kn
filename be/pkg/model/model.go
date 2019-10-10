@@ -11,8 +11,8 @@ type SourceLink struct {
 	ArticleRegexp string             `bson:"article_regexp" json:"article_regexp"`
 }
 
-// URIHash is exported.
-type URIHash struct {
+// Link is exported.
+type Link struct {
 	ID   primitive.ObjectID `bson:"_id"  json:"id,omitempty"`
 	Hash string             `bson:"hash" json:"hash"`
 	URI  string             `bson:"uri"  json:"uri"`
