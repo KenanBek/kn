@@ -1,2 +1,5 @@
+# Ignore VIM files
+*.swp
+
 # Ignore coverage files
 coverage.txt
