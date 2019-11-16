@@ -1,4 +1,5 @@
-# Ignore VIM files
+# Ignore editor files
+.idea
 *.swp
 
 # Ignore coverage files
