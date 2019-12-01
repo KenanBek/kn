@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
+	"kn/se/internal/crawler/source"
 	"kn/se/pkg/crawl"
-	"kn/se/pkg/source"
 )
 
 func main() {

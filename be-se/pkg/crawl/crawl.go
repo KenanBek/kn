@@ -3,6 +3,7 @@ package crawl
 import (
 	"crypto/sha256"
 	"fmt"
+	"kn/se/internal/crawler/source"
 	"log"
 	"regexp"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/pkg/errors"
 
 	"kn/se/pkg/model"
-	"kn/se/pkg/store"
 )
 
 // Hash is exported.
@@ -21,7 +21,7 @@ func Hash(url string) string {
 
 // CrawlSourceLinks is exported.
 func CrawlSourceLinks(sourceLink model.SourceLink) {
-	storage := store.New()
+	storage := source.New()
 	defer storage.Cancel()
 
 	collector := colly.NewCollector()
