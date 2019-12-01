@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"be/pkg/model"
+	"kn/se/pkg/model"
 )
 
 // Parse parses source files and return list of source links.

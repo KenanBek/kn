@@ -1,26 +1,27 @@
 package store
 
 import (
-	"be/pkg/model"
 	"context"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
-    "strconv"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+
+	"kn/se/pkg/model"
 )
 
 const (
 	DatabaseName = "kn"
 
-    CollectionNameLinks = "links"
-    CollectionNamePosts = "posts"
+	CollectionNameLinks = "links"
+	CollectionNamePosts = "posts"
 )
 
 // Store is exported.
@@ -31,7 +32,6 @@ type Store struct {
 	Cancel   func()
 
 	links, posts *mongo.Collection
-
 }
 
 // New is exported.
@@ -43,11 +43,11 @@ func New() Store {
 	if host == "" {
 		host = "localhost"
 	}
-    portStr := os.Getenv("KN_MONGODB_PORT")
-    port, err := strconv.Atoi(portStr)
-    if err != nil {
-        port = 27017
-    }
+	portStr := os.Getenv("KN_MONGODB_PORT")
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		port = 27017
+	}
 	uri := fmt.Sprintf("mongodb://%s:%d", host, port)
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
@@ -73,14 +73,14 @@ func New() Store {
 	posts := db.Collection(CollectionNamePosts)
 
 	return Store{
-        // connection
+		// connection
 		client:   client,
 		context:  context,
 		database: db,
-        Cancel:   cancel,
-        // collections
-		links:    links,
-		posts:    posts,
+		Cancel:   cancel,
+		// collections
+		links: links,
+		posts: posts,
 	}
 }
 

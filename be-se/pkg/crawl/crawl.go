@@ -9,8 +9,8 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/pkg/errors"
 
-	"be/pkg/model"
-	"be/pkg/store"
+	"kn/se/pkg/model"
+	"kn/se/pkg/store"
 )
 
 // Hash is exported.

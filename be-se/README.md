@@ -1,3 +1,7 @@
+# BE-SE: Search Engine
+
+`be-se` is the core of the KN and combines together crawler, indexer, storage and API.
+
 # Current workflow
 
 ```
