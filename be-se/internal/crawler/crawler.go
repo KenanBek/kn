@@ -1,15 +1,20 @@
 package crawler
 
+import "fmt"
+
 // Crawler is exported.
 type Crawler interface {
 	Crawl()
 }
 
-type source struct {
-	url    string
-	regexp string
+type Instance struct {
+	sl SourceLoader
 }
 
-func (s *source) Crawl() {
-	panic("Not implemented")
+func (i *Instance) Crawl() {
+	srcs, err := i.sl.Load()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }

@@ -11,7 +11,7 @@ build:
 	$(GOBUILD) -o ${BINARY_KN_NAME} -v ${SOURCE_KN_NAME}
 
 .PHONY: images
-images:
+image:
 	docker build -f Dockerfile --tag kn/be-se:latest
 
 .PHONY: test
