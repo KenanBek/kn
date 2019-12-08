@@ -23,3 +23,13 @@ jobs:
         # -s used to enable search in specified directory
         bash <(curl -s https://codecov.io/bash) -s .
         cat ./be-se/coverage.txt
+
+    - name: Build
+      run: |
+        cd be-se
+        go build -o kn cmd/main.go
+
+    - name: Docker
+      uses: "actions/docker/cli@master"
+      with:
+        args: "build -f ./be-se/Dockerfile ./be-se"
