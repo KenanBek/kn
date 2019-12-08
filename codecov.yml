@@ -14,7 +14,7 @@ coverage:
 flags:
   backend:
     paths:
-      - be/
+      - be-se/
   frontend:
     paths:
-      - fe/
+      - fe-web/kn
