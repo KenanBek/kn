@@ -26,5 +26,5 @@ test/cover:
 
 .PHONY: test/e2e
 test/e2e:
-	docker build -f Dockerfile -t kn/be-se:latest .
+	docker build -f Dockerfile -t kn/be-se:latest . && \
 	docker-compose -f docker-compose.yml up --build --abort-on-container-exit --exit-code-from kn
