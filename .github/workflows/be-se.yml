@@ -19,31 +19,31 @@ jobs:
     - name: Register back-end package
       run: |
         mkdir -p /home/runner/go/src/
-        cp /home/runner/work/kn/kn/be /home/runner/go/src/ --recursive
-        ls -la /home/runner/go/src/be
+        cp /home/runner/work/kn/kn/be-se /home/runner/go/src/ --recursive
+        ls -la /home/runner/go/src/be-se
 
     - name: Get dependencies
       run: |
-        cd /home/runner/go/src/be
+        cd /home/runner/go/src/be-se
         go get -v ./...
 
     - name: Test & Publish
       run: |
-        cd /home/runner/go/src/be
+        cd /home/runner/go/src/be-se
         go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
         # move to git directory
         # codecov's bash requires .git directory
         cd /home/runner/work/kn/kn
         # -s used to enable search in specified directory
-        bash <(curl -s https://codecov.io/bash) -s /home/runner/go/src/be
-        cat /home/runner/go/src/be/coverage.txt
+        bash <(curl -s https://codecov.io/bash) -s /home/runner/go/src/be-se
+        cat /home/runner/go/src/be-se/coverage.txt
 
     - name: Build
       run: |
-        cd /home/runner/go/src/be
+        cd /home/runner/go/src/be-se
         go build -o kn cmd/main.go
 
     - name: Docker
       uses: "actions/docker/cli@master"
       with:
-        args: "build -f ./be/Dockerfile ./be"
+        args: "build -f ./be-se/Dockerfile ./be-se"
