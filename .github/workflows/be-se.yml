@@ -30,4 +30,4 @@ jobs:
         go build -o kn cmd/main.go
 
     - name: Docker
-      run: docker build . --file Dockerfile --tag kn/be-se:latest
+      run: docker build . --file be-se/Dockerfile --tag kn/be-se:latest
