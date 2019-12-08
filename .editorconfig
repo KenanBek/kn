@@ -19,16 +19,9 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
-# 4 space indentation
-[*.py]
-line_length=120
-known_first_party=demo_cookiecutter
-multi_line_output=3
-default_section=THIRDPARTY
-
 # Tab indentation (no size specified)
 [Makefile]
-indent_style = space
+indent_style = tab
 indent_size = 4
 
 # Indentation override for all JS under lib directory

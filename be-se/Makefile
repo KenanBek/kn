@@ -1,10 +1,15 @@
-GOCMD=go
-GOBUILD=$(GOCMD) build
-GOTEST=$(GOCMD) test
-GOCOVER=$(GOCMD) tool cover
+GO=go
+GORUN=$(GO) run
+GOBUILD=$(GO) build
+GOTEST=$(GO) test
+GOCOVER=$(GO) tool cover
 
 BINARY_KN_NAME=kn
-SOURCE_KN_NAME=cmd/main.go
+SOURCE_KN_NAME=cmd/kn/kn.go
+
+.PHONY: run/kn
+run/kn:
+	$(GORUN) cmd/kn/kn.go
 
 .PHONY: build
 build:
