@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: |
         cd be-se
-        go build -o kn cmd/main.go
+        make build
 
     - name: Docker
       run: |
