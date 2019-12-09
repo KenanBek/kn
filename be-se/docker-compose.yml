@@ -9,8 +9,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
-  kn:
-    image: kn/be-se:latest  # tag after build
+  kn-be-se:
+    image: kn-be-se:latest  # tag after build
     build:
       context: ./
       dockerfile: ./Dockerfile
@@ -20,4 +20,4 @@ services:
     depends_on:
       - mongodb
     command:
-      - kn
+      - kn-se

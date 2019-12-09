@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	DatabaseName = "kn"
+	DatabaseName = "kn-be-se"
 
 	CollectionNameLinks = "links"
 	CollectionNamePosts = "posts"
