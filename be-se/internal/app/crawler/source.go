@@ -3,26 +3,11 @@ package crawler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/pkg/errors"
 )
-
-// INTERFACE
-
-// SourceLoader is exported.
-type SourceLoader interface {
-	Load() ([]Source, error)
-}
-
-// Source is exported.
-type Source struct {
-	URL string `bson:"source_url"     json:"source_url"`
-	// Regexp defines regular expression to match with file
-	Regexp string `bson:"article_regexp" json:"article_regexp"`
-}
-
-// IMPLEMENTATION
 
 // JSONSourceLoader is exported.
 type JSONSourceLoader struct {
@@ -44,7 +29,12 @@ func (jsl *JSONSourceLoader) Load() ([]Source, error) {
 		return nil, errors.Wrap(err, "error while opening file")
 
 	}
-	defer file.Close()
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(errors.Wrap(err, "Error on file close"))
+		}
+	}()
 
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
