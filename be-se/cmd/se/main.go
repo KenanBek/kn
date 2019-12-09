@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	log.Println("KN")
+	log.Println("Application: kn/se")
 }

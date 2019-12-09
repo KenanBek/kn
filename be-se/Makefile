@@ -7,13 +7,18 @@ GOCOVER=$(GO) tool cover
 BINARY_KN_NAME=kn
 SOURCE_KN_NAME=cmd/kn/kn.go
 
-.PHONY: run/kn
-run/kn:
-	$(GORUN) cmd/kn/kn.go
+.PHONY: run/se
+run/se:
+	$(GORUN) cmd/se/main.go
+
+.PHONY: run/crawler
+run/crawler:
+	$(GORUN) cmd/crawler/main.go
 
 .PHONY: build
 build:
-	$(GOBUILD) -o ${BINARY_KN_NAME} -v ${SOURCE_KN_NAME}
+	$(GOBUILD) -o kn-se -v cmd/se/main.go
+	$(GOBUILD) -o kn-se-crawler -v cmd/crawler/main.go
 
 .PHONY: images
 image:
@@ -31,5 +36,5 @@ test/cover:
 
 .PHONY: test/e2e
 test/e2e:
-	docker build -f Dockerfile -t kn/be-se:latest . && \
-	docker-compose -f docker-compose.yml up --build --abort-on-container-exit --exit-code-from kn
+	docker build -f Dockerfile -t kn-be-se:latest . && \
+	docker-compose -f docker-compose.yml up --build --abort-on-container-exit --exit-code-from kn-be-se
