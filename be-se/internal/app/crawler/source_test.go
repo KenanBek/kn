@@ -7,7 +7,7 @@ import (
 )
 
 func TestJSONSourceLoader(t *testing.T) {
-	jsl := NewJSONSourceLoader("../../assets/initial_sources.json")
+	jsl := NewJSONSourceLoader("assets/initial_sources.json")
 	srcs, err := jsl.Load()
 
 	assert.Nil(t, err)

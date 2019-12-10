@@ -3,6 +3,7 @@ package crawler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"kn/se/internal/domain"
 	"log"
 	"os"
 
@@ -23,7 +24,7 @@ func NewJSONSourceLoader(path string) *JSONSourceLoader {
 }
 
 // Load is exported.
-func (jsl *JSONSourceLoader) Load() ([]Source, error) {
+func (jsl *JSONSourceLoader) Load() ([]domain.Source, error) {
 	file, err := os.Open(jsl.Path)
 	if err != nil {
 		return nil, errors.Wrap(err, "error while opening file")
@@ -32,7 +33,7 @@ func (jsl *JSONSourceLoader) Load() ([]Source, error) {
 	defer func() {
 		err := file.Close()
 		if err != nil {
-			log.Fatal(errors.Wrap(err, "Error on file close"))
+			log.Fatal(errors.Wrap(err, "error on file close"))
 		}
 	}()
 
@@ -41,7 +42,7 @@ func (jsl *JSONSourceLoader) Load() ([]Source, error) {
 		return nil, errors.Wrap(err, "error while reading file")
 	}
 
-	var srcs []Source
+	var srcs []domain.Source
 	err = json.Unmarshal(bytes, &srcs)
 	if err != nil {
 		return nil, errors.Wrap(err, "error while parsing JSON")

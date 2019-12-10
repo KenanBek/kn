@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  mongodb:
+  kn-mongo:
     image: mongo:latest
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet 1
@@ -15,9 +15,10 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     environment:
-      - KN_MONGODB_HOST=mongodb
+      - KN_MONGODB_HOST=kn-mongo
       - KN_MONGODB_PORT=27017
     depends_on:
       - mongodb
     command:
-      - kn-se
+      - kn-be-se
+      - kn-be-crawler

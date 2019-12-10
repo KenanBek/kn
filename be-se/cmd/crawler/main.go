@@ -6,9 +6,12 @@ import (
 )
 
 func main() {
-	log.Println("Application: kn/se/crawler")
+	log.Println("Application: kn-se-crawler")
 
 	sl := crawler.NewJSONSourceLoader("assets/initial_sources.json")
-	c := crawler.NewCrawler(sl)
+	s := crawler.NewCollyScraper()
+	r := crawler.NewMongoRepository()
+
+	c := crawler.NewWebCrawler(sl, s, r)
 	c.Crawl()
 }

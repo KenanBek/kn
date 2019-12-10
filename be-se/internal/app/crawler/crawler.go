@@ -1,8 +1,9 @@
 package crawler
 
 import (
-	"fmt"
+	"kn/se/internal/domain"
 	"log"
+	"regexp"
 
 	"github.com/pkg/errors"
 )
@@ -14,30 +15,72 @@ type Crawler interface {
 
 // SourceLoader is exported.
 type SourceLoader interface {
-	Load() ([]Source, error)
+	Load() ([]domain.Source, error)
 }
 
-func NewCrawler(sl SourceLoader) Instance {
-	return Instance{sl: sl}
+// Scraper is exported.
+type Scraper interface {
+	GetLinks(url string) ([]string, error)
 }
 
-// Source is exported.
-type Source struct {
-	URL    string `bson:"source_url"     json:"source_url"`
-	Regexp string `bson:"article_regexp" json:"article_regexp"`
+// Repository is exported.
+type Repository interface {
+	HasLink(hash string) bool
+	SaveLink(link *domain.Link) error
+	IsArticle(hash string) bool
 }
 
-type Instance struct {
-	sl SourceLoader
+// NewWebCrawler is exported.
+func NewWebCrawler(sl SourceLoader, s Scraper, r Repository) WebCrawler {
+	return WebCrawler{
+		sl:         sl,
+		scraper:    s,
+		repository: r,
+	}
 }
 
-func (i *Instance) Crawl() {
-	srcs, err := i.sl.Load()
+// WebCrawler is exported.
+type WebCrawler struct {
+	sl         SourceLoader
+	scraper    Scraper
+	repository Repository
+}
+
+// Crawl is exported.
+func (wc *WebCrawler) Crawl() {
+	ss, err := wc.sl.Load()
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "Source load error"))
+		log.Fatal(errors.Wrap(err, "source load error"))
 	}
 
-	for _, s := range srcs {
-		fmt.Printf("%v\n", s)
+	for _, s := range ss {
+		ar, err := regexp.Compile(s.ArticleRegexp)
+		if err != nil {
+			log.Fatalln(errors.Wrap(err, "error while compiling regexp"))
+		}
+
+		urls, err := wc.scraper.GetLinks(s.SourceURL)
+		if err != nil {
+			log.Println(err)
+		}
+
+		for _, url := range urls {
+			h := domain.Hash(url)
+
+			hasLink := wc.repository.HasLink(h)
+
+			if !hasLink {
+				link := domain.Link{
+					Hash:      h,
+					URL:       url,
+					IsArticle: ar.MatchString(url),
+				}
+
+				err := wc.repository.SaveLink(&link)
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		}
 	}
 }

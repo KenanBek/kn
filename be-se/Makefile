@@ -4,9 +4,6 @@ GOBUILD=$(GO) build
 GOTEST=$(GO) test
 GOCOVER=$(GO) tool cover
 
-BINARY_KN_NAME=kn
-SOURCE_KN_NAME=cmd/kn/kn.go
-
 .PHONY: run/se
 run/se:
 	$(GORUN) cmd/se/main.go
@@ -15,20 +12,28 @@ run/se:
 run/crawler:
 	$(GORUN) cmd/crawler/main.go
 
+.PHONY: run/mongo
+run/mongo:
+	docker run --name kn-mongo -d -p 27017:27017 mongo:latest
+
 .PHONY: build
 build:
-	$(GOBUILD) -o kn-se -v cmd/se/main.go
-	$(GOBUILD) -o kn-se-crawler -v cmd/crawler/main.go
+	$(GOBUILD) -o kn-be-se -v cmd/se/main.go
+	$(GOBUILD) -o kn-be-crawler -v cmd/crawler/main.go
 
-.PHONY: images
+.PHONY: image
 image:
-	docker build -f Dockerfile --tag kn/be-se:latest
+	docker build -f Dockerfile --tag kn-be-se:latest .
+
+.PHONY: lint
+lint:
+	golint -set_exit_status=1 `go list ./...`
 
 .PHONY: test
 test:
 	$(GOTEST) -v ./...
 
-.PHONY: cover
+.PHONY: test/cover
 test/cover:
 	$(GOTEST) -v -coverprofile=coverage.out ./...
 	$(GOCOVER) -func=coverage.out

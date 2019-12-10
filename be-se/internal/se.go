@@ -1,9 +1,9 @@
 package se
 
-// Storage
+// Storage is exported.
 type Storage interface{}
 
-// Events
+// Events is exported.
 type Events interface{}
 
 // SE is a application composer.
@@ -17,6 +17,7 @@ type SE struct {
 	indexer interface{}
 }
 
+// NewSE is exported.
 func NewSE() *SE {
 	return &SE{}
 }
