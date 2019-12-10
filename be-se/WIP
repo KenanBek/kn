@@ -1,0 +1,4 @@
+- move storage into repository/"storage"
+- add storage models to wrap domain models
+- make use of parser.generic
+- regexp parse and hash func usage within app.crawler

@@ -1,8 +1,6 @@
 package crawl
 
 import (
-	"crypto/sha256"
-	"fmt"
 	"kn/se/internal/crawler/source"
 	"log"
 	"regexp"
@@ -12,12 +10,6 @@ import (
 
 	"kn/se/pkg/model"
 )
-
-// Hash is exported.
-func Hash(url string) string {
-	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(url)))[:6]
-	return hash
-}
 
 // CrawlSourceLinks is exported.
 func CrawlSourceLinks(sourceLink model.SourceLink) {

@@ -104,8 +104,8 @@ func (store *Store) CheckLinkByHash(hash string) bool {
 func (store *Store) AddLink(link *model.Link) {
 	filter := bson.M{"hash": bson.M{"$eq": link.Hash}}
 
-	options := options.UpdateOptions{}
-	options.SetUpsert(true)
+	o := options.UpdateOptions{}
+	o.SetUpsert(true)
 
 	updateData := bson.M{
 		"$set": bson.M{
@@ -114,7 +114,7 @@ func (store *Store) AddLink(link *model.Link) {
 		},
 	}
 
-	_, err := store.links.UpdateOne(store.context, filter, updateData, &options)
+	_, err := store.links.UpdateOne(store.context, filter, updateData, &o)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "Database URIHash update error"))
 	}
