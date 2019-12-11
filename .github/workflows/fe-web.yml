@@ -1,0 +1,32 @@
+name: fe-web
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+
+    - name: Set up Node (13.x)
+      uses: actions/setup-node@v1
+      with:
+        node-version: 13.x
+      id: node
+
+    - name: Install & Test
+      run: |
+        cd fe-web/kn
+        npm install
+        npm test
+
+    - name: Build
+      run: |
+        cd fe-web/kn
+        npm run build
+
+    - name: Docker
+      run: |
+        cd fe-web/kn
+        docker build -f Dockerfile -t kn-fe-web:latest .
