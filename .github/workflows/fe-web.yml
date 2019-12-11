@@ -19,12 +19,12 @@ jobs:
       run: |
         cd fe-web/kn
         npm install
-        npm test
+        CI=true npm test
 
     - name: Build
       run: |
         cd fe-web/kn
-        npm run build
+        CI=true npm run build
 
     - name: Docker
       run: |
