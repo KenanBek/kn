@@ -18,7 +18,7 @@ services:
       - KN_MONGODB_HOST=kn-mongo
       - KN_MONGODB_PORT=27017
     depends_on:
-      - mongodb
+      - kn-mongo
     command:
       - kn-be-se
       - kn-be-crawler
