@@ -16,6 +16,11 @@ run/crawler:
 run/mongo:
 	docker run --name kn-mongo -d -p 27017:27017 mongo:latest
 
+.PHONY: run/mongo/destroy
+run/mongo/destroy:
+	docker stop kn-mongo
+	docker rm kn-mongo
+
 .PHONY: build
 build:
 	$(GOBUILD) -o kn-be-se -v cmd/se/main.go
