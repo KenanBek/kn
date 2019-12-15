@@ -18,7 +18,7 @@ jobs:
     - name: Test & Publish
       run: |
         cd be-se
-        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
         cd ../
         # -s used to enable search in specified directory
         bash <(curl -s https://codecov.io/bash) -s .
@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: |
         cd be-se
-        go build -o kn cmd/main.go
+        make build
 
     - name: Docker
       run: |

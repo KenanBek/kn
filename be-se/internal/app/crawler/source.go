@@ -3,26 +3,12 @@ package crawler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"kn/se/internal/domain"
+	"log"
 	"os"
 
 	"github.com/pkg/errors"
 )
-
-// INTERFACE
-
-// SourceLoader is exported.
-type SourceLoader interface {
-	Load() ([]Source, error)
-}
-
-// Source is exported.
-type Source struct {
-	URL string `bson:"source_url"     json:"source_url"`
-	// Regexp defines regular expression to match with file
-	Regexp string `bson:"article_regexp" json:"article_regexp"`
-}
-
-// IMPLEMENTATION
 
 // JSONSourceLoader is exported.
 type JSONSourceLoader struct {
@@ -38,20 +24,25 @@ func NewJSONSourceLoader(path string) *JSONSourceLoader {
 }
 
 // Load is exported.
-func (jsl *JSONSourceLoader) Load() ([]Source, error) {
+func (jsl *JSONSourceLoader) Load() ([]domain.Source, error) {
 	file, err := os.Open(jsl.Path)
 	if err != nil {
 		return nil, errors.Wrap(err, "error while opening file")
 
 	}
-	defer file.Close()
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(errors.Wrap(err, "error on file close"))
+		}
+	}()
 
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		return nil, errors.Wrap(err, "error while reading file")
 	}
 
-	var srcs []Source
+	var srcs []domain.Source
 	err = json.Unmarshal(bytes, &srcs)
 	if err != nil {
 		return nil, errors.Wrap(err, "error while parsing JSON")

@@ -3,5 +3,5 @@ RUN mkdir /app
 ADD . /app/
 WORKDIR /app
 RUN go test -v ./...
-RUN go build -o kn cmd/main.go
+RUN make build
 ENV PATH="/app:${PATH}"
