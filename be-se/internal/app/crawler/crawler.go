@@ -1,3 +1,5 @@
+// Package crawler fetches web pages and searches for article links.
+//go:generate mockgen -source=crawler.go -destination=crawler_mock_test.go -package=crawler
 package crawler
 
 import (

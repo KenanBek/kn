@@ -38,6 +38,10 @@ lint:
 test:
 	$(GOTEST) -v ./...
 
+.PHONY: mocks
+mocks:
+	$(GO) generate -v ./...
+
 .PHONY: test/cover
 test/cover:
 	$(GOTEST) -v -coverprofile=coverage.out ./...
