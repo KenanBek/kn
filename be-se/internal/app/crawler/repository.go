@@ -25,6 +25,9 @@ const (
 
 	// CollectionNameArticles is exported.
 	CollectionNameArticles = "articles"
+
+	hostEnv = "KN_MONGODB_HOST"
+	portEnv = "KN_MONGODB_PORT"
 )
 
 // MongoRepository is exported.
@@ -43,18 +46,24 @@ func NewMongoRepository() *MongoRepository {
 	repo := MongoRepository{}
 
 	// client
-	host := os.Getenv("KN_MONGODB_HOST")
+	host := os.Getenv(hostEnv)
 	if host == "" {
 		host = "localhost"
 	}
-	portStr := os.Getenv("KN_MONGODB_PORT")
+	portStr := os.Getenv(portEnv)
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
 		port = 27017
 	}
-	uri := fmt.Sprintf("mongodb://%s:%d", host, port)
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
+	dur, _ := time.ParseDuration("3s")
+	uri := fmt.Sprintf("mongodb://%s:%d", host, port)
+	opt := options.Client()
+
+	opt.SetConnectTimeout(dur)
+	opt.ApplyURI(uri)
+
+	client, err := mongo.NewClient(opt)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "database new client error"))
 	}
@@ -89,11 +98,12 @@ func NewMongoRepository() *MongoRepository {
 }
 
 // Ping is exported.
-func (s *MongoRepository) Ping() {
+func (s *MongoRepository) Ping() error {
 	err := s.client.Ping(s.context, readpref.Primary())
 	if err != nil {
-		log.Fatalln(errors.Wrap(err, "database ping error"))
+		return errors.Wrap(err, "database ping error")
 	}
+	return nil
 }
 
 // HasLink returns true if there is no matching link found.
