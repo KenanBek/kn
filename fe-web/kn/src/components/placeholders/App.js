@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Navigation from './Navigation';
 import Main from './Main';
-import Errors from '../containers/Errors'
+import Errors from '../containers/Errors';
 
 function App() {
   return (

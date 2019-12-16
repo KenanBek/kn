@@ -12,7 +12,7 @@ import storeFactory from './store';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
-axios.defaults.baseURL = process.env.REACT_APP_BE_URL;
+axios.defaults.baseURL = process.env.KN_BE_API;
 axios.defaults.timeout = 60 * 1000; // 60 seconds
 const store = storeFactory();
 
