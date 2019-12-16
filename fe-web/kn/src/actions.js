@@ -22,18 +22,18 @@ export const fetchLinkList = () => async (dispatch) => {
       count: 2,
       items: [{
         id: 1,
-        title: "Link 1",
-        desc: "about link 1",
-        url: "http://google.com"
+        title: 'Link 1',
+        desc: 'about link 1',
+        url: 'http://google.com',
       }, {
         id: 2,
-        title: "Link 2",
-        desc: "about link 2",
-        url: "http://google.com"
-      }]
-    }
-  })
-}
+        title: 'Link 2',
+        desc: 'about link 2',
+        url: 'http://google.com',
+      }],
+    },
+  });
+};
 
 /* Examples */
 

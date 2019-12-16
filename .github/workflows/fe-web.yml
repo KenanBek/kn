@@ -15,10 +15,20 @@ jobs:
         node-version: 13.x
       id: node
 
-    - name: Install & Test
+    - name: Install
       run: |
         cd fe-web/kn
         npm install
+
+    - name: Lint
+      run: |
+        cd fe-web/kn
+        npm i -g eslint
+        eslint .
+
+    - name: Test
+      run: |
+        cd fe-web/kn
         CI=true npm test
 
     - name: Build
