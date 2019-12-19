@@ -1,0 +1,40 @@
+name: kn-be-sd
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+
+    - name: Set up Go (1.13)
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Linter
+      run: |
+        cd be-sd
+        docker run --rm -v $(pwd):/data cytopia/golint .
+
+    - name: Test & Publish
+      run: |
+        cd be-sd
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
+        cd ../
+        # -s used to enable search in specified directory
+        bash <(curl -s https://codecov.io/bash) -s .
+        cat ./be-sd/coverage.txt
+
+    - name: Build
+      run: |
+        cd be-sd
+        make build
+
+    - name: Docker
+      run: |
+        cd be-sd
+        make test/e2e

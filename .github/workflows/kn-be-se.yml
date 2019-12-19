@@ -1,4 +1,4 @@
-name: be-se
+name: kn-be-se
 on: [push]
 jobs:
 
