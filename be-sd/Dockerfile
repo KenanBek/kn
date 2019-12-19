@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:latest as builder
 WORKDIR ..
 RUN mkdir kn-be-sd
 WORKDIR kn-be-sd
@@ -8,8 +8,5 @@ RUN make test
 RUN make build
 
 FROM alpine
-COPY --from=builder /pricing-surge/pricing-surge .
-COPY --from=builder /pricing-surge/scripts ./scripts
-COPY --from=builder /pricing-surge/migrations ./migrations
-RUN chmod +x ./scripts/migrate_and_run.sh
+COPY --from=builder /kn-be-sd/kn-be-sd .
 ENV PATH="/kn-be-sd:${PATH}"
