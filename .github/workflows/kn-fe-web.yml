@@ -1,4 +1,4 @@
-name: fe-web
+name: kn-fe-web
 on: [push]
 jobs:
 

@@ -5,16 +5,23 @@ coverage:
   status:
     project:
       default: off
-      frontend:
-        flags: frontend
-      backend:
+      kn-be-sd:
         target: 50%
-        flags: backend
+        flags: kn-be-sd
+      kn-be-se:
+        target: 50%
+        flags: kn-be-se
+      kn-fe-web:
+        target: 50%
+        flags: kn-fe-web
 
 flags:
-  backend:
+  kn-be-sd:
+    paths:
+      - be-sd/
+  kn-be-se:
     paths:
       - be-se/
-  frontend:
+  kn-fe-web:
     paths:
       - fe-web/kn

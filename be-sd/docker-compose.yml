@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  kn-be-sd:
+    image: kn-be-sd:latest  # tag after build
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - KN_BE_SD_PORT=9080
+      - KN_BE_SD=kn-be-sd
+      - KN_BE_API=kn-fe-api
+      - KN_FE_WEB=kn-fe-web
+      - KN_INFRA_ELASTIC=infra-elastic
+      - KN_INFRA_KIBANA=infra-kibana
+      - KN_INFRA_GRAFANA=infra-grafana
+    command:
+      - ./kn-be-sd
+    ports:
+      - 9080:9080
