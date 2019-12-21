@@ -7,7 +7,14 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     environment:
+      - KN_BE_SD_PORT=9080
+      - KN_BE_SD=kn-be-sd
+      - KN_BE_API=kn-fe-api
+      - KN_FE_WEB=kn-fe-web
       - KN_INFRA_ELASTIC=infra-elastic
       - KN_INFRA_KIBANA=infra-kibana
       - KN_INFRA_GRAFANA=infra-grafana
-      - KN_FE_WEB=kn-fe-web
+    command:
+      - ./kn-be-sd
+    ports:
+      - 9080:9080

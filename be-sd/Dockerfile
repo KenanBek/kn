@@ -1,12 +1,10 @@
 FROM golang:latest as builder
-WORKDIR ..
-RUN mkdir kn-be-sd
-WORKDIR kn-be-sd
+RUN mkdir /app
+WORKDIR /app
 COPY . ./
-ARG version=dev
 RUN make test
-RUN make build
+ARG version=dev
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -ldflags "-X main.version=$version" -o kn-be-sd -v ./cmd/sd/main.go
 
 FROM alpine
-COPY --from=builder /kn-be-sd/kn-be-sd .
-ENV PATH="/kn-be-sd:${PATH}"
+COPY --from=builder /app/kn-be-sd /

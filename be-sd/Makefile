@@ -4,7 +4,7 @@ GOBUILD=$(GO) build
 GOTEST=$(GO) test
 GOCOVER=$(GO) tool cover
 
-.PHONY: run/se
+.PHONY: run/sd
 run/sd:
 	$(GORUN) cmd/sd/main.go
 
