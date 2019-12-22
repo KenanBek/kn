@@ -11,6 +11,9 @@ coverage:
       kn-be-se:
         target: 50%
         flags: kn-be-se
+      kn-be-api:
+        target: 50%
+        flags: kn-be-api
       kn-fe-web:
         target: 50%
         flags: kn-fe-web
@@ -22,6 +25,9 @@ flags:
   kn-be-se:
     paths:
       - be-se/
+  kn-be-api:
+    paths:
+      - be-api/
   kn-fe-web:
     paths:
       - fe-web/kn

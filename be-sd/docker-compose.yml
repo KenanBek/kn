@@ -11,9 +11,10 @@ services:
       - KN_BE_SD=kn-be-sd
       - KN_BE_API=kn-fe-api
       - KN_FE_WEB=kn-fe-web
-      - KN_INFRA_ELASTIC=infra-elastic
-      - KN_INFRA_KIBANA=infra-kibana
-      - KN_INFRA_GRAFANA=infra-grafana
+      - KN_INFRA_MONGO=kn-infra-mongo
+      - KN_INFRA_ELASTIC=kn-infra-elastic
+      - KN_INFRA_KIBANA=kn-infra-kibana
+      - KN_INFRA_GRAFANA=kn-infra-grafana
     command:
       - ./kn-be-sd
     ports:
