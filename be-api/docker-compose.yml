@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+  kn-mongo:
+    image: mongo:latest
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+  kn-be-api:
+    image: kn-be-api:latest  # tag after build
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      - KN_MONGODB_HOST=kn-mongo
+      - KN_MONGODB_PORT=27017
+    depends_on:
+      - kn-infra-mongo
+    command:
+      - kn-be-api
