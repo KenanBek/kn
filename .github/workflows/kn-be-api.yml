@@ -1,0 +1,40 @@
+name: kn-be-api
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@master
+
+    - name: Set up Go (1.13)
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Linter
+      run: |
+        cd be-api
+        docker run --rm -v $(pwd):/data cytopia/golint .
+
+    - name: Test & Publish
+      run: |
+        cd be-api
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
+        cd ../
+        # -s used to enable search in specified directory
+        bash <(curl -s https://codecov.io/bash) -s .
+        cat ./be-api/coverage.txt
+
+    - name: Build
+      run: |
+        cd be-api
+        make build
+
+    - name: Docker
+      run: |
+        cd be-api
+        make test/e2e

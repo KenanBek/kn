@@ -22,12 +22,12 @@ func GetMongodbEnv() (string, string) {
 func SetMongodbEnv(host, port string) error {
 	var err error
 
-	err = os.Setenv("KN_MONGODB_HOST", "localhost")
+	err = os.Setenv("KN_INFRA_MONGO_HOST", "localhost")
 	if err != nil {
 		return err
 	}
 
-	err = os.Setenv("KN_MONGODB_PORT", port)
+	err = os.Setenv("KN_INFRA_MONGO_PORT", port)
 	if err != nil {
 		return err
 	}

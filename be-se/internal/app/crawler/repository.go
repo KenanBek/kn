@@ -26,8 +26,8 @@ const (
 	// CollectionNameArticles is exported.
 	CollectionNameArticles = "articles"
 
-	hostEnv = "KN_MONGODB_HOST"
-	portEnv = "KN_MONGODB_PORT"
+	hostEnv = "KN_INFRA_MONGO_HOST"
+	portEnv = "KN_INFRA_MONGO_PORT"
 )
 
 // MongoRepository is exported.
