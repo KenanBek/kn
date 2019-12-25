@@ -49,6 +49,7 @@ type WebCrawler struct {
 }
 
 // Crawl is exported.
+// TODO: Crawl either should return list of errors (stream) or log them to event stream.
 func (wc *WebCrawler) Crawl() {
 	// Load the source links by the given source loader.
 	ss, err := wc.sl.Load()
@@ -87,7 +88,7 @@ func (wc *WebCrawler) Crawl() {
 
 				err := wc.repository.SaveLink(&link)
 				if err != nil {
-					log.Println(err)
+					log.Fatalln(errors.Wrap(err, "error while saving link"))
 				}
 			}
 		}
