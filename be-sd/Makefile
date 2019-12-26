@@ -6,7 +6,7 @@ GOCOVER=$(GO) tool cover
 
 .PHONY: run/sd
 run/sd:
-	$(GORUN) cmd/sd/main.go
+	KN_BE_SD_PORT=9080 $(GORUN) cmd/sd/main.go
 
 .PHONY: build
 build:
