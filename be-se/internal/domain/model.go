@@ -18,14 +18,14 @@ type Link struct {
 	IsArticle bool   `bson:"is_article" json:"is_article"`
 }
 
-// Article is exported
+// Article is exported.
 type Article struct {
 	Hash  string `bson:"hash" json:"hash"`
 	URL   string `bson:"url" json:"url"`
 	Title string `bson:"title" json:"title"`
 }
 
-// Hash returns hash value of the given URL
+// Hash returns the hash value of the given URL.
 func Hash(url string) string {
 	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(url)))[:6]
 	return hash
