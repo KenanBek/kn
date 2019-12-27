@@ -51,6 +51,8 @@ type WebCrawler struct {
 // Crawl is exported.
 // TODO: Crawl either should return list of errors (stream) or log them to event stream.
 func (wc *WebCrawler) Crawl() {
+	NewSessionLog()
+
 	// Load the source links by the given source loader.
 	ss, err := wc.sl.Load()
 	if err != nil {

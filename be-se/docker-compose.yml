@@ -1,14 +1,6 @@
 version: '3.5'
 
 services:
-  kn-infra-mongo:
-    image: mongo:latest
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet 1
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
   kn-be-se:
     image: kn-be-se:latest  # tag after build
     build:
@@ -22,3 +14,36 @@ services:
     command:
       - kn-be-se
       - kn-be-crawler
+    restart: on-failure
+
+  kn-infra-mongo:
+    image: mongo:latest
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+  kn-infra-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+  kn-infra-kibana:
+    image: docker.elastic.co/kibana/kibana:7.5.1
+    depends_on:
+      - kn-infra-elasticsearch
+    secrets:
+      - source: kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+
+secrets:
+  kibana.yml:
+    file: ./config/kibana.yml
