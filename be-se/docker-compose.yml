@@ -16,6 +16,11 @@ services:
       - kn-be-crawler
     restart: on-failure
 
+  kn-be-sd:
+    image: in-be-sd:latest
+    environment:
+
+
   kn-infra-mongo:
     image: mongo:latest
     healthcheck:
