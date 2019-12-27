@@ -2,37 +2,119 @@ package envd
 
 import "syscall"
 
-const (
-	// ENForBESdPort is exported.
-	ENForBESdPort = "KN_BE_SD_PORT"
-	// ENForBESd is exported.
-	ENForBESd = "KN_BE_SD"
-	// ENForBEApi is exported.
-	ENForBEApi = "KN_BE_API"
-	// ENForFEWeb is exported.
-	ENForFEWeb = "KN_FE_WEB"
-)
+// BackendServices keeps information about back-end services.
+type BackendServices struct {
+	SD  string `json:"sd"`
+	API string `json:"api"`
+}
 
-// SD struct used to keep information about internal services.
+// FrontendServices keeps information about front-end services.
+type FrontendServices struct {
+	Web string `json:"web"`
+}
+
+// InfraServices keeps information about infrastructure services.
+type InfraServices struct {
+	Mongo         string `json:"mongo"`
+	Elasticsearch string `json:"elasticsearch"`
+	Kibana        string `json:"kibana"`
+	Grafana       string `json:"grafana"`
+}
+
+// Services keeps information about group of service components.
+type Services struct {
+	Backend  BackendServices  `json:"backend"`
+	Frontend FrontendServices `json:"frontend"`
+	Infra    InfraServices    `json:"infra"`
+}
+
+// SD represents final service information distinguished by internal and external services.
 type SD struct {
-	BESdPort string `json:"be_sd_port"`
-	BESd     string `json:"be_sd"`
-	BEApi    string `json:"be_api"`
-	FEWeb    string `json:"fe_web"`
+	Port     string   `json:"-"`
+	Internal Services `json:"internal"`
+	Public   Services `json:"public"`
+}
+
+func internalServices() (Services, error) {
+	evBackendSD := "KN_INT_BE_SD"
+	evBackendAPI := "KN_INT_BE_API"
+	evFrontendWeb := "KN_INT_FE_WEB"
+	evInfraMongo := "KN_INT_INFRA_MONGO"
+	evInfraElasticsearch := "KN_INT_INFRA_ELASTICSEARCH"
+	evInfraKibana := "KN_INT_INFRA_KIBANA"
+	evInfraGrafana := "KN_INT_INFRA_GRAFANA"
+
+	sd, _ := syscall.Getenv(evBackendSD)
+	api, _ := syscall.Getenv(evBackendAPI)
+	web, _ := syscall.Getenv(evFrontendWeb)
+	mdb, _ := syscall.Getenv(evInfraMongo)
+	es, _ := syscall.Getenv(evInfraElasticsearch)
+	kibana, _ := syscall.Getenv(evInfraKibana)
+	grafana, _ := syscall.Getenv(evInfraGrafana)
+
+	return Services{
+		Backend: BackendServices{
+			SD:  sd,
+			API: api,
+		},
+		Frontend: FrontendServices{
+			Web: web,
+		},
+		Infra: InfraServices{
+			Mongo:         mdb,
+			Elasticsearch: es,
+			Kibana:        kibana,
+			Grafana:       grafana,
+		},
+	}, nil
+}
+
+func publicServices() (Services, error) {
+	evBackendSD := "KN_PUB_BE_SD"
+	evBackendAPI := "KN_PUB_BE_API"
+	evFrontendWeb := "KN_PUB_FE_WEB"
+	evInfraMongoDB := "KN_PUB_INFRA_MONGO"
+	evInfraElasticsearch := "KN_PUB_INFRA_ELASTICSEARCH"
+	evInfraKibana := "KN_PUB_INFRA_KIBANA"
+	evInfraGrafana := "KN_PUB_INFRA_GRAFANA"
+
+	sd, _ := syscall.Getenv(evBackendSD)
+	api, _ := syscall.Getenv(evBackendAPI)
+	web, _ := syscall.Getenv(evFrontendWeb)
+	mdb, _ := syscall.Getenv(evInfraMongoDB)
+	es, _ := syscall.Getenv(evInfraElasticsearch)
+	kibana, _ := syscall.Getenv(evInfraKibana)
+	grafana, _ := syscall.Getenv(evInfraGrafana)
+
+	return Services{
+		Backend: BackendServices{
+			SD:  sd,
+			API: api,
+		},
+		Frontend: FrontendServices{
+			Web: web,
+		},
+		Infra: InfraServices{
+			Mongo:         mdb,
+			Elasticsearch: es,
+			Kibana:        kibana,
+			Grafana:       grafana,
+		},
+	}, nil
 }
 
 // NewSD harvests specific env variables and returns a new instance of SD.
 func NewSD() (*SD, error) {
-	sdPort, _ := syscall.Getenv(ENForBESdPort)
-	sdURL, _ := syscall.Getenv(ENForBESd)
-	apiURL, _ := syscall.Getenv(ENForBEApi)
-	webURL, _ := syscall.Getenv(ENForFEWeb)
+	evSDPort := "KN_BE_SD_PORT"
+	sdPort, _ := syscall.Getenv(evSDPort)
+
+	is, _ := internalServices()
+	ps, _ := publicServices()
 
 	sd := SD{
-		BESdPort: sdPort,
-		BESd:     sdURL,
-		BEApi:    apiURL,
-		FEWeb:    webURL,
+		Port:     sdPort,
+		Internal: is,
+		Public:   ps,
 	}
 
 	return &sd, nil

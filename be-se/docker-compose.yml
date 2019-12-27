@@ -17,9 +17,31 @@ services:
     restart: on-failure
 
   kn-be-sd:
-    image: in-be-sd:latest
+    image: kn-be-sd:latest
     environment:
-
+      - KN_BE_SD_PORT=9080
+      # internal
+      - KN_INT_BE_SD=kn-be-sd:9080
+      - KN_INT_BE_API=kn-fe-api
+      - KN_INT_FE_WEB=kn-fe-web
+      - KN_INT_INFRA_MONGO=kn-infra-mongo
+      - KN_INT_INFRA_ELASTICSEARCH=kn-infra-elasticsearch
+      - KN_INT_INFRA_KIBANA=kn-infra-kibana
+      - KN_INT_INFRA_PROMETHEUS=kn-infra-prometheus
+      - KN_INT_INFRA_GRAFANA=kn-infra-grafana
+      # public
+      - KN_PUB_BE_SD=http://localhost:9080
+      - KN_PUB_BE_API=http://localhost:9081
+      - KN_PUB_FE_WEB=http://localhost:9091
+      - KN_PUB_INFRA_MONGO=http://localhost:9071
+      - KN_PUB_INFRA_ELASTICSEARCH=http://localhost:9072
+      - KN_PUB_INFRA_KIBANA=http://localhost:9073
+      - KN_PUB_INFRA_PROMETHEUS=http://localhost:9074
+      - KN_PUB_INFRA_GRAFANA=http://localhost:9075
+    command:
+      - ./kn-be-sd
+    ports:
+      - 9080:9080
 
   kn-infra-mongo:
     image: mongo:latest
@@ -29,6 +51,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
+    ports:
+      - 9071:27017
   kn-infra-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
     environment:
@@ -38,7 +62,7 @@ services:
         soft: -1
         hard: -1
     ports:
-      - "9200:9200"
+      - 9072:9200
   kn-infra-kibana:
     image: docker.elastic.co/kibana/kibana:7.5.1
     depends_on:
@@ -47,7 +71,7 @@ services:
       - source: kibana.yml
         target: /usr/share/kibana/config/kibana.yml
     ports:
-      - "5601:5601"
+      - 9073:5601
 
 secrets:
   kibana.yml:

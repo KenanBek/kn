@@ -8,12 +8,12 @@ import (
 
 // prepareEnv sets needed values in env.
 func prepareEnv() {
-
+	return
 }
 
 // restoreEnv sets values before tests.
 func restoreEnv() {
-
+	return
 }
 
 func TestNewSD(t *testing.T) {

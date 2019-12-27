@@ -9,11 +9,11 @@ import (
 	"kn/sd/internal/envd"
 )
 
-var esd *envd.SD
+var sd *envd.SD
 
 func handlerIndex(w http.ResponseWriter, r *http.Request) {
 	// prepare json or return error response
-	js, err := json.Marshal(esd)
+	js, err := json.Marshal(sd)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -30,7 +30,7 @@ func handlerIndex(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var err error
-	esd, err = envd.NewSD()
+	sd, err = envd.NewSD()
 	if err != nil {
 		log.Println("error while parsing env variables %w", err)
 	}
@@ -38,6 +38,6 @@ func main() {
 	http.HandleFunc("/", handlerIndex)
 
 	log.Println("Application: kn-be-sd")
-	log.Printf("Port: %s\n", esd.BESdPort)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", esd.BESdPort), nil))
+	log.Printf("Port: %s\n", sd.Port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", sd.Port), nil))
 }
