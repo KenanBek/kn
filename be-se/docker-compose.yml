@@ -2,17 +2,20 @@ version: '3.5'
 
 services:
   kn-be-se:
-    image: kn-be-se:latest  # tag after build
+    #image: kn-be-se:latest  # tag after build
     build:
-      context: ./
+      context: .
       dockerfile: ./Dockerfile
     environment:
+      - KN_BE_SE_RUN_COUNT=0
+      - KN_BE_SE_RUN_INTERVAL=15
       - KN_INFRA_MONGO_HOST=kn-infra-mongo
       - KN_INFRA_MONGO_PORT=27017
     depends_on:
       - kn-infra-mongo
+      - kn-infra-elasticsearch
     command:
-      - kn-be-se
+#      - kn-be-se
       - kn-be-crawler
     restart: on-failure
 
