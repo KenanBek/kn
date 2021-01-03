@@ -1,3 +1,5 @@
+Note: Outdated public clone of CodeKN/CodeKN. The current version of CodeKN is not publicly available yet.
+
 # KN
 
 | Build  | Status |
