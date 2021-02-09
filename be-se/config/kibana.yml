@@ -1,0 +1,5 @@
+server.name: kn-infra-kibana
+server.host: "0"
+elasticsearch.hosts: [ "http://kn-infra-elasticsearch:9200" ]
+server.ssl.enabled: false
+xpack.monitoring.ui.container.elasticsearch.enabled: true

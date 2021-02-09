@@ -8,13 +8,24 @@ services:
       dockerfile: ./Dockerfile
     environment:
       - KN_BE_SD_PORT=9080
-      - KN_BE_SD=kn-be-sd
-      - KN_BE_API=kn-fe-api
-      - KN_FE_WEB=kn-fe-web
-      - KN_INFRA_MONGO=kn-infra-mongo
-      - KN_INFRA_ELASTIC=kn-infra-elastic
-      - KN_INFRA_KIBANA=kn-infra-kibana
-      - KN_INFRA_GRAFANA=kn-infra-grafana
+      # internal
+      - KN_INT_BE_SD=kn-be-sd:9080
+      - KN_INT_BE_API=kn-fe-api
+      - KN_INT_FE_WEB=kn-fe-web
+      - KN_INT_INFRA_MONGO=kn-infra-mongo
+      - KN_INT_INFRA_ELASTICSEARCH=kn-infra-elasticsearch
+      - KN_INT_INFRA_KIBANA=kn-infra-kibana
+      - KN_INT_INFRA_PROMETHEUS=kn-infra-prometheus
+      - KN_INT_INFRA_GRAFANA=kn-infra-grafana
+      # public
+      - KN_PUB_BE_SD=http://localhost:9080
+      - KN_PUB_BE_API=http://localhost:9081
+      - KN_PUB_FE_WEB=http://localhost:9091
+      - KN_PUB_INFRA_MONGO=http://localhost:9071
+      - KN_PUB_INFRA_ELASTICSEARCH=http://localhost:9072
+      - KN_PUB_INFRA_KIBANA=http://localhost:9073
+      - KN_PUB_INFRA_PROMETHEUS=http://localhost:9074
+      - KN_PUB_INFRA_GRAFANA=http://localhost:9075
     command:
       - ./kn-be-sd
     ports:

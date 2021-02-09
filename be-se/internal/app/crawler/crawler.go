@@ -12,7 +12,7 @@ import (
 
 // Crawler is exported.
 type Crawler interface {
-	Crawl()
+	Crawl() error
 }
 
 // SourceLoader is exported.
@@ -49,12 +49,13 @@ type WebCrawler struct {
 }
 
 // Crawl is exported.
-// TODO: Crawl either should return list of errors (stream) or log them to event stream.
-func (wc *WebCrawler) Crawl() {
+func (wc *WebCrawler) Crawl() error {
+	NewSessionLog()
+
 	// Load the source links by the given source loader.
 	ss, err := wc.sl.Load()
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "source load error"))
+		return errors.Wrap(err, "source load error")
 	}
 
 	// Iterate over the source links and check internal links.
@@ -63,14 +64,16 @@ func (wc *WebCrawler) Crawl() {
 		// Compile article regexp so it can be checked faster.
 		ar, err := regexp.Compile(s.ArticleRegexp)
 		if err != nil {
-			log.Fatalln(errors.Wrap(err, "error while compiling regexp"))
+			return errors.Wrap(err, "error while compiling regexp")
 		}
 
 		// Get all the links within the source link.
 		urls, err := wc.scraper.GetLinks(s.SourceURL)
 		if err != nil {
-			log.Println(err)
+			return errors.Wrap(err, "error while getting links for source link")
 		}
+
+		log.Println("found links: ", len(urls))
 
 		// Iterate over the found links and check for article links.
 		// All found links will be checked with database and if it is already
@@ -79,6 +82,8 @@ func (wc *WebCrawler) Crawl() {
 			h := domain.Hash(url)
 			hasLink := wc.repository.HasLink(h)
 
+			log.Println("checking link: ", url)
+
 			if !hasLink {
 				link := domain.Link{
 					Hash:      h,
@@ -86,11 +91,15 @@ func (wc *WebCrawler) Crawl() {
 					IsArticle: ar.MatchString(url),
 				}
 
+				log.Println("saving link: ", link)
+
 				err := wc.repository.SaveLink(&link)
 				if err != nil {
-					log.Fatalln(errors.Wrap(err, "error while saving link"))
+					return errors.Wrap(err, "error while saving link")
 				}
 			}
 		}
 	}
+
+	return nil
 }

@@ -5,48 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"syscall"
+
+	"kn/sd/internal/envd"
 )
 
-const (
-	// ENForBESdPort is exported.
-	ENForBESdPort = "KN_BE_SD_PORT"
-	// ENForBESd is exported.
-	ENForBESd = "KN_BE_SD"
-	// ENForBEApi is exported.
-	ENForBEApi = "KN_BE_API"
-	// ENForFEWeb is exported.
-	ENForFEWeb = "KN_FE_WEB"
-)
-
-// SD struct used to keep information about internal services.
-type SD struct {
-	BESdPort string `json:"be_sd_port"`
-	BESd     string `json:"be_sd"`
-	BEApi    string `json:"be_api"`
-	FEWeb    string `json:"fe_web"`
-}
-
-func NewSD() *SD {
-	sdPort, _ := syscall.Getenv(ENForBESdPort)
-	sdURL, _ := syscall.Getenv(ENForBESd)
-	apiURL, _ := syscall.Getenv(ENForBEApi)
-	webURL, _ := syscall.Getenv(ENForFEWeb)
-
-	sd := SD{
-		BESdPort: sdPort,
-		BESd:     sdURL,
-		BEApi:    apiURL,
-		FEWeb:    webURL,
-	}
-
-	return &sd
-}
-
-var sd *SD
+var sd *envd.SD
 
 func handlerIndex(w http.ResponseWriter, r *http.Request) {
-
 	// prepare json or return error response
 	js, err := json.Marshal(sd)
 	if err != nil {
@@ -64,11 +29,15 @@ func handlerIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	sd = NewSD()
+	var err error
+	sd, err = envd.NewSD()
+	if err != nil {
+		log.Println("error while parsing env variables %w", err)
+	}
 
 	http.HandleFunc("/", handlerIndex)
 
 	log.Println("Application: kn-be-sd")
-	log.Printf("Port: %s\n", sd.BESdPort)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", sd.BESdPort), nil))
+	log.Printf("Port: %s\n", sd.Port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", sd.Port), nil))
 }

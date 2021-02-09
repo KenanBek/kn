@@ -63,6 +63,8 @@ func NewMongoRepository() *MongoRepository {
 	opt.SetConnectTimeout(dur)
 	opt.ApplyURI(uri)
 
+	log.Printf("Mongo: using %s to connect", uri)
+
 	client, err := mongo.NewClient(opt)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "database new client error"))
